@@ -16,7 +16,7 @@
       overflow-x: hidden;
     }
 
-    /* Bola vermelha FIXA no CENTRO da tela */
+    /* Bola vermelha FIXA no CENTRO da tela - sempre visível */
     #fovCircle {
       position: fixed;
       top: 50%;
@@ -27,11 +27,8 @@
       pointer-events: none;
       box-shadow: 0 0 15px rgba(255,0,0,0.7);
       z-index: 9999;
-      opacity: 0;
-      transition: opacity 0.3s, width 0.2s, height 0.2s;
-    }
-    #fovCircle.visible {
       opacity: 0.6;
+      transition: width 0.2s, height 0.2s;
     }
 
     .panel {
@@ -148,7 +145,7 @@
 </head>
 <body>
 
-<!-- Bola vermelha no CENTRO da tela -->
+<!-- Bola vermelha sempre no centro da tela -->
 <div id="fovCircle" style="width:60px; height:60px;"></div>
 
 <div class="panel">
@@ -222,25 +219,18 @@
 </div>
 
 <script>
-  // Alternar abas
+  // Alternar abas (sem esconder a bola vermelha)
   document.querySelectorAll('.tab').forEach(tab => {
     tab.addEventListener('click', () => {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
       tab.classList.add('active');
       document.getElementById(tab.dataset.tab).classList.add('active');
-
-      // Mostra/esconde a bola vermelha só na aba AIM
-      const circle = document.getElementById('fovCircle');
-      if (tab.dataset.tab === 'aim') {
-        circle.classList.add('visible');
-      } else {
-        circle.classList.remove('visible');
-      }
+      // Bola vermelha NÃO some mais em nenhuma aba
     });
   });
 
-  // FOV Slider
+  // FOV Slider (só visível na aba AIM, mas o preview persiste em todas)
   const track = document.getElementById('fovTrack');
   const knob = document.getElementById('fovKnob');
   const valueDisplay = document.getElementById('fovValue');
@@ -251,7 +241,7 @@
   function updateFOV(percent) {
     const fov = (percent / 100) * 180;
     valueDisplay.textContent = `[${fov.toFixed(1)}]`;
-    const size = 40 + (fov / 180) * 300; // de ~40px a ~340px (ajuste se quiser menor/maior)
+    const size = 40 + (fov / 180) * 300; // tamanho da bola vermelha
     circle.style.width = size + 'px';
     circle.style.height = size + 'px';
   }
@@ -288,9 +278,8 @@
     updateFOV(percent);
   });
 
-  // Inicial
+  // Valor inicial
   updateFOV(0);
-  document.getElementById('fovCircle').classList.add('visible');
 </script>
 
 </body>
