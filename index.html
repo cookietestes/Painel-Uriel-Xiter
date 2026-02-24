@@ -15,7 +15,7 @@
       position: relative;
     }
 
-    /* Bolinhas roxas de fundo */
+    /* Bolinhas roxas */
     .bubbles { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
     .bubble {
       position: absolute;
@@ -33,7 +33,7 @@
       100% { transform: translateY(-20vh) scale(1.1); opacity: 0; }
     }
 
-    /* Tela de login (pequena e centralizada) */
+    /* Login */
     #loginPanel {
       position: fixed;
       top: 50%;
@@ -103,7 +103,7 @@
 
     .btn:hover { transform: translateY(-3px); box-shadow: 0 0 30px rgba(123,44,191,0.9); }
 
-    /* Mensagem de sucesso animada */
+    /* Mensagem sucesso */
     #successMsg {
       position: fixed;
       top: 50%;
@@ -137,46 +137,12 @@
 
     #mainPanel.show { opacity: 1; pointer-events: auto; }
 
-    /* Estilos do painel (copiados do seu código) */
-    .background-bubbles { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
-    .bubble {
-      position: absolute;
-      background: radial-gradient(circle at 30% 30%, #c084fc, #7b2cbf, #4a0080);
-      border-radius: 50%;
-      box-shadow: 0 0 18px rgba(123, 44, 191, 0.8);
-      opacity: 0;
-      pointer-events: none;
-      animation: float linear infinite;
-    }
-    @keyframes float {
-      0% { transform: translateY(120vh) scale(0.3); opacity: 0; }
-      15% { opacity: 0.7; }
-      85% { opacity: 0.7; }
-      100% { transform: translateY(-30vh) scale(1.3); opacity: 0; }
-    }
-    .bubble.up { animation-direction: reverse; }
     .center-container {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 10;
-      width: 100%;
-      max-width: 360px;
-      padding: 0 15px;
-    }
-    #fovCircle {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      border: 3px solid #ff0000;
-      border-radius: 50%;
-      pointer-events: none;
-      box-shadow: 0 0 20px rgba(255,0,0,0.8);
-      z-index: 999;
-      opacity: 0;
-      transition: opacity 0.3s, width 0.25s, height 0.25s;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
     }
     .panel {
       width: 340px;
@@ -217,23 +183,30 @@
     .content { padding: 12px; display: none; }
     .content.active { display: block; }
     .row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: 8px 0;
-      padding: 4px 0;
+      margin: 10px 0;
+      padding: 6px 0;
     }
     .row.bordered {
       border-bottom: 1px solid #4a0080;
-      padding-bottom: 8px;
-      margin-bottom: 8px;
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+    }
+    /* Checkbox em cima do texto */
+    .option {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
     }
     input[type="checkbox"] {
       accent-color: #ff66cc;
-      transform: scale(1.1);
-      margin-right: 6px;
+      transform: scale(1.3);
+      margin: 0;
     }
-    label { cursor: pointer; }
+    label {
+      font-size: 14px;
+      cursor: pointer;
+    }
     .dropdown-row {
       background: #2a004a;
       border: 1px solid #7b2cbf;
@@ -320,28 +293,24 @@
 
 <div class="bubbles" id="bubbles"></div>
 
-<!-- Tela de login (aparece primeiro) -->
+<!-- Login -->
 <div id="loginPanel">
   <h1>Bote a key pra acessar o painel!!</h1>
-
   <div class="input-box">
     <input type="text" placeholder="... Bote a key do auxilio vip aqui ..." id="keyInput">
   </div>
-
   <p class="buy-text">
     Compre com nos uma key do <strong>auxilio vip</strong> e garanta<br>
     Uma boa Mira no Free Fire ou Free Fire Max!!
   </p>
-
   <button class="btn" onclick="checkKey()">Entrar</button>
 </div>
 
-<!-- Mensagem animada -->
+<!-- Mensagem sucesso -->
 <div id="successMsg">Key Correta<br>Auxilio vip</div>
 
-<!-- Painel principal completo -->
+<!-- Painel principal -->
 <div id="mainPanel">
-  <div class="background-bubbles" id="bubblesPanel"></div> <!-- bolinhas dentro do painel também -->
   <div id="fovCircle" style="width:60px; height:60px;"></div>
   <div class="center-container">
     <div class="panel">
@@ -356,12 +325,24 @@
       </div>
       <div class="content active" id="aim">
         <div class="row bordered">
-          <label><input type="checkbox" class="toggle"> Ativar Aimbot</label>
-          <label><input type="checkbox" class="toggle"> Puxar em Paredes</label>
+          <div class="option">
+            <input type="checkbox" class="toggle" id="aimbot">
+            <label for="aimbot">Ativar Aimbot</label>
+          </div>
+          <div class="option">
+            <input type="checkbox" class="toggle" id="puxarParedes">
+            <label for="puxarParedes">Puxar em Paredes</label>
+          </div>
         </div>
         <div class="row bordered">
-          <label><input type="checkbox" class="toggle"> Pular Knocked</label>
-          <label><input type="checkbox" id="exibirFov" class="toggle"> Exibir FOV</label>
+          <div class="option">
+            <input type="checkbox" class="toggle" id="pularKnocked">
+            <label for="pularKnocked">Pular Knocked</label>
+          </div>
+          <div class="option">
+            <input type="checkbox" class="toggle" id="exibirFov">
+            <label for="exibirFov">Exibir FOV</label>
+          </div>
         </div>
         <div class="dropdown-row">
           <span>Disparo + Escopo</span>
@@ -387,14 +368,45 @@
       </div>
       <div class="content" id="esp">
         <div class="row bordered">
-          <label><input type="checkbox" class="toggle"> Ativar ESP</label>
-          <label><input type="checkbox" class="toggle"> Esconder Painel</label>
+          <div class="option">
+            <input type="checkbox" class="toggle" id="ativarEsp">
+            <label for="ativarEsp">Ativar ESP</label>
+          </div>
+          <div class="option">
+            <input type="checkbox" class="toggle" id="esconderPainel">
+            <label for="esconderPainel">Esconder Painel</label>
+          </div>
         </div>
-        <div class="row"><label><input type="checkbox" class="toggle"> ESP Linha</label></div>
-        <div class="row"><label><input type="checkbox" class="toggle"> ESP Nome</label></div>
-        <div class="row"><label><input type="checkbox" class="toggle"> ESP Caixa</label></div>
-        <div class="row"><label><input type="checkbox" class="toggle"> ESP Esqueleto</label></div>
-        <div class="row"><label><input type="checkbox" class="toggle"> ESP Vida</label></div>
+        <div class="row">
+          <div class="option">
+            <input type="checkbox" class="toggle" id="espLinha">
+            <label for="espLinha">ESP Linha</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="option">
+            <input type="checkbox" class="toggle" id="espNome">
+            <label for="espNome">ESP Nome</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="option">
+            <input type="checkbox" class="toggle" id="espCaixa">
+            <label for="espCaixa">ESP Caixa</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="option">
+            <input type="checkbox" class="toggle" id="espEsqueleto">
+            <label for="espEsqueleto">ESP Esqueleto</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="option">
+            <input type="checkbox" class="toggle" id="espVida">
+            <label for="espVida">ESP Vida</label>
+          </div>
+        </div>
       </div>
       <div class="content" id="misc">
         <div class="misc-info">
@@ -408,7 +420,7 @@
 </div>
 
 <script>
-// Bolinhas de fundo (geral)
+// Bolinhas
 function createBubble() {
   const b = document.createElement('div');
   b.classList.add('bubble');
@@ -424,10 +436,10 @@ function createBubble() {
 for(let i=0;i<25;i++) setTimeout(createBubble,i*300);
 setInterval(createBubble,1000);
 
-// Verificação da key
+// Key
 function checkKey() {
   const key = document.getElementById('keyInput').value.trim();
-  const keyCorreta = "vipcalvao"; // MUDE AQUI PARA SUA KEY REAL
+  const keyCorreta = "vipcalvao"; // MUDE AQUI
 
   if (key === keyCorreta) {
     const msg = document.getElementById('successMsg');
@@ -456,8 +468,7 @@ document.getElementById('keyInput').addEventListener('keypress', (e) => {
   if (e.key === 'Enter') checkKey();
 });
 
-// ==================== SCRIPT DO PAINEL PRINCIPAL ====================
-const bubblesContainer = document.getElementById('bubblesPanel') || document.getElementById('bubbles');
+// Scripts do painel
 const MAX_BUBBLES = 60;
 let bubbles = [];
 function createBubblePanel() {
@@ -474,7 +485,7 @@ function createBubblePanel() {
     bubble.classList.add('up');
     bubble.style.animationDuration = (duration + 6) + 's';
   }
-  bubblesContainer.appendChild(bubble);
+  document.getElementById('bubbles').appendChild(bubble);
   bubbles.push(bubble);
   bubble.addEventListener('animationend', () => {
     bubble.remove();
@@ -497,7 +508,7 @@ document.addEventListener('visibilitychange', () => {
 });
 requestAnimationFrame(bubbleLoop);
 
-// Dropdown Cabeça
+// Dropdown
 const cabeçaDropdown = document.getElementById('cabeçaDropdown');
 const cabeçaArrow = document.getElementById('cabeçaArrow');
 const cabeçaText = document.getElementById('cabeçaText');
@@ -516,7 +527,7 @@ document.querySelectorAll('.submenu-item').forEach(item => {
   });
 });
 
-// Status MISC
+// Status
 const statusText = document.getElementById('statusText');
 const toggles = document.querySelectorAll('.toggle');
 function updateStatus() {
@@ -534,7 +545,7 @@ updateStatus();
 const exibirFov = document.getElementById('exibirFov');
 const circle = document.getElementById('fovCircle');
 function toggleFovCircle() {
-  if (circle) circle.style.opacity = exibirFov.checked ? '0.65' : '0';
+  if (circle) circle.style.opacity = exibirFov ? exibirFov.checked ? '0.65' : '0';
 }
 if (exibirFov) exibirFov.addEventListener('change', toggleFovCircle);
 
@@ -584,7 +595,7 @@ if (track) track.addEventListener('click', (e) => {
 updateFOV(0);
 toggleFovCircle();
 
-// Alternar abas
+// Abas
 document.querySelectorAll('.tab').forEach(tab => {
   tab.addEventListener('click', () => {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
