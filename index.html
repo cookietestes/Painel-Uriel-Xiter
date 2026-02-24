@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Auxílio VIP - Login</title>
+  <title>Auxílio VIP - FFH4X Calvaolindao</title>
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
-      min-height: 100vh;
+      height: 100vh;
       background: linear-gradient(135deg, #0d001a, #220033);
       color: #e0c0ff;
       font-family: Arial, Helvetica, sans-serif;
@@ -15,7 +15,7 @@
       position: relative;
     }
 
-    /* Bolinhas de fundo */
+    /* Bolinhas roxas de fundo */
     .bubbles { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
     .bubble {
       position: absolute;
@@ -33,79 +33,77 @@
       100% { transform: translateY(-20vh) scale(1.1); opacity: 0; }
     }
 
-    /* Painel de login */
+    /* Login panel */
     #loginPanel {
       position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 400px;
+      width: 340px;
       background: rgba(30, 0, 56, 0.92);
       border: 3px solid #8a2be2;
-      border-radius: 32px;
+      border-radius: 28px;
       box-shadow: 0 0 50px rgba(138,43,226,0.7);
-      padding: 50px 35px;
+      padding: 40px 30px;
       text-align: center;
-      z-index: 10;
-      backdrop-filter: blur(10px);
+      z-index: 20;
       transition: opacity 1s ease, transform 1s ease;
     }
 
-    h1 {
-      font-size: 28px;
-      margin-bottom: 20px;
+    #loginPanel h1 {
+      font-size: 24px;
+      margin-bottom: 25px;
       color: #d5aaff;
-      text-shadow: 0 0 12px #8a2be2;
+      text-shadow: 0 0 10px #8a2be2;
     }
 
     .input-box {
       background: #1a0033;
       border: 2px solid #7b2cbf;
-      border-radius: 24px;
-      padding: 8px;
-      margin: 30px auto;
-      max-width: 340px;
+      border-radius: 20px;
+      padding: 6px;
+      margin: 20px auto 25px;
     }
 
     input {
       width: 100%;
-      padding: 16px;
-      font-size: 16px;
+      padding: 14px;
+      font-size: 15px;
       background: transparent;
       border: none;
       color: #e0c0ff;
       outline: none;
       text-align: center;
-      border-radius: 20px;
+      border-radius: 16px;
     }
 
     input::placeholder { color: #9966cc; }
 
     .buy-text {
-      font-size: 15px;
+      font-size: 14px;
       color: #cc99ff;
-      line-height: 1.6;
-      margin: 20px 0 40px;
+      line-height: 1.5;
+      margin-bottom: 30px;
     }
 
     .buy-text strong { color: #00ffaa; }
 
     .btn {
-      padding: 15px 60px;
-      font-size: 17px;
+      padding: 12px 50px;
+      font-size: 16px;
       font-weight: bold;
       background: linear-gradient(90deg, #7b2cbf, #b066ff);
       border: none;
       border-radius: 50px;
       color: white;
       cursor: pointer;
-      box-shadow: 0 0 25px rgba(123,44,191,0.7);
+      box-shadow: 0 0 20px rgba(123,44,191,0.6);
       transition: all 0.3s;
     }
 
-    .btn:hover { transform: translateY(-4px); box-shadow: 0 0 35px rgba(123,44,191,1); }
+    .btn:hover { transform: translateY(-3px); box-shadow: 0 0 30px rgba(123,44,191,0.9); }
 
-    /* Mensagem de sucesso animada */
+    /* Mensagem de sucesso */
     #successMsg {
       position: fixed;
       top: 50%;
@@ -113,54 +111,38 @@
       transform: translate(-50%, -50%) scale(0.7);
       background: rgba(0, 255, 136, 0.2);
       border: 3px solid #00ff88;
-      border-radius: 24px;
+      border-radius: 20px;
       color: #00ff88;
-      font-size: 34px;
+      font-size: 32px;
       font-weight: bold;
-      padding: 40px 80px;
+      padding: 30px 70px;
       text-align: center;
-      text-shadow: 0 0 20px #00ff88;
-      z-index: 20;
+      text-shadow: 0 0 15px #00ff88;
+      z-index: 30;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.8s ease, transform 0.8s ease;
     }
 
-    /* Painel principal (cheat menu) */
+    /* Painel principal (cheats) */
     #mainPanel {
       position: fixed;
       inset: 0;
-      background: #0a0015;
       opacity: 0;
       transition: opacity 1.2s ease;
       pointer-events: none;
-      overflow-y: auto;
       z-index: 5;
+      overflow-y: auto;
     }
 
-    #mainPanel.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    /* Conteúdo do painel principal (cole o seu HTML aqui) */
-    .cheat-content {
-      max-width: 360px;
-      margin: 40px auto;
-      padding: 20px;
-      background: rgba(30, 0, 56, 0.9);
-      border: 2px solid #7b2cbf;
-      border-radius: 20px;
-      box-shadow: 0 0 40px rgba(123,44,191,0.6);
-      color: #d5b8ff;
-    }
+    #mainPanel.show { opacity: 1; pointer-events: auto; }
   </style>
 </head>
 <body>
 
 <div class="bubbles" id="bubbles"></div>
 
-<!-- Painel de login -->
+<!-- Tela de login (aparece primeiro) -->
 <div id="loginPanel">
   <h1>Bote a key pra acessar o painel!!</h1>
 
@@ -179,27 +161,74 @@
 <!-- Mensagem animada -->
 <div id="successMsg">Key Correta<br>Auxilio vip</div>
 
-<!-- Painel principal (cheat menu) -->
+<!-- Painel principal (aparece depois da key correta) -->
 <div id="mainPanel">
-  <div class="cheat-content">
-    <!-- Aqui vai TODO o seu painel de cheats anterior -->
-    <!-- Exemplo simples para teste: -->
-    <h2 style="text-align:center; color:#ffccff; margin-bottom:20px;">Bem-vindo ao Auxílio VIP!</h2>
-    <p style="text-align:center;">Painel carregado com sucesso.</p>
-    
-    <!-- Cole aqui o HTML completo do painel com AIM, ESP, MISC, slider, etc. -->
-    <!-- Exemplo: -->
-    <div style="margin-top:30px; text-align:center; color:#cc99ff;">
-      AIM | ESP | MISC<br><br>
-      Ativar Aimbot: [ ]<br>
-      Exibir FOV: [ ]<br>
-      ... (seu menu completo aqui)
+  <div class="center-container">
+    <div class="panel">
+      <div class="header">
+        <span class="title">FFH4X Calvaolindao</span>
+        <span class="close">×</span>
+      </div>
+      <div class="tabs">
+        <div class="tab active" data-tab="aim"><span>✚</span>AIM</div>
+        <div class="tab" data-tab="esp"><span>👁</span>ESP</div>
+        <div class="tab" data-tab="misc"><span>⚙</span>MISC</div>
+      </div>
+      <div class="content active" id="aim">
+        <div class="row bordered">
+          <label><input type="checkbox" class="toggle"> Ativar Aimbot</label>
+          <label><input type="checkbox" class="toggle"> Puxar em Paredes</label>
+        </div>
+        <div class="row bordered">
+          <label><input type="checkbox" class="toggle"> Pular Knocked</label>
+          <label><input type="checkbox" id="exibirFov" class="toggle"> Exibir FOV</label>
+        </div>
+        <div class="dropdown-row">
+          <span>Disparo + Escopo</span>
+          <span>▼ <span class="icon-small">✦</span></span>
+        </div>
+        <div class="dropdown-row" id="cabeçaDropdown">
+          <span id="cabeçaText">Cabeça</span>
+          <span id="cabeçaArrow">▼</span>
+        </div>
+        <div class="submenu" id="cabeçaSubmenu">
+          <div class="submenu-item" data-part="Cabeça">Cabeça</div>
+          <div class="submenu-item" data-part="Pescoço">Pescoço</div>
+          <div class="submenu-item" data-part="Barriga">Barriga</div>
+          <div class="submenu-item" data-part="Quadril">Quadril</div>
+        </div>
+        <div class="fov-container">
+          <div class="fov-track" id="fovTrack">
+            <div class="fov-knob" id="fovKnob" style="left:0%;"></div>
+          </div>
+          <div class="fov-value" id="fovValue">[0.0]</div>
+          <div style="text-align:center; color:#cc99ff;">Regular FOV</div>
+        </div>
+      </div>
+      <div class="content" id="esp">
+        <div class="row bordered">
+          <label><input type="checkbox" class="toggle"> Ativar ESP</label>
+          <label><input type="checkbox" class="toggle"> Esconder Painel</label>
+        </div>
+        <div class="row"><label><input type="checkbox" class="toggle"> ESP Linha</label></div>
+        <div class="row"><label><input type="checkbox" class="toggle"> ESP Nome</label></div>
+        <div class="row"><label><input type="checkbox" class="toggle"> ESP Caixa</label></div>
+        <div class="row"><label><input type="checkbox" class="toggle"> ESP Esqueleto</label></div>
+        <div class="row"><label><input type="checkbox" class="toggle"> ESP Vida</label></div>
+      </div>
+      <div class="content" id="misc">
+        <div class="misc-info">
+          <div class="misc-title">FFH4X Painel Free</div>
+          <div class="misc-status" id="statusText">Status: Tudo desativado ( Off )</div>
+          <div class="misc-creator">Criador do auxilio Vip ( @Calvaolindao )</div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
-// Bolinhas de fundo
+// Bolinhas roxas
 function createBubble() {
   const b = document.createElement('div');
   b.classList.add('bubble');
@@ -218,7 +247,7 @@ setInterval(createBubble,1000);
 // Verificação da key + animações
 function checkKey() {
   const key = document.getElementById('keyInput').value.trim();
-  const keyCorreta = "vipcalvao";  // ← TROQUE PELA SUA KEY REAL AQUI
+  const keyCorreta = "vipcalvao"; // ← MUDE PARA SUA KEY REAL AQUI
 
   if (key === keyCorreta) {
     const msg = document.getElementById('successMsg');
@@ -229,27 +258,154 @@ function checkKey() {
       msg.style.opacity = '0';
       msg.style.transform = 'translate(-50%, -50%) scale(0.7)';
 
-      // Esconde o login com animação
       const login = document.getElementById('loginPanel');
       login.style.opacity = '0';
       login.style.transform = 'translate(-50%, -50%) scale(0.85)';
 
-      // Mostra o painel principal com fade in
       setTimeout(() => {
         login.style.display = 'none';
         document.getElementById('mainPanel').classList.add('show');
       }, 1200);
-    }, 2000);  // tempo que a mensagem fica visível
+    }, 2000);
   } else {
-    alert("Key inválida! Tente novamente.");
+    alert("Key inválida!");
   }
 }
 
-// Enter para confirmar
+// Enter confirma
 document.getElementById('keyInput').addEventListener('keypress', (e) => {
   if (e.key === 'Enter') checkKey();
 });
-</script>
 
+// ==================== SCRIPT DO PAINEL PRINCIPAL (copiado do seu código) ====================
+const bubblesContainer = document.getElementById('bubbles');
+const MAX_BUBBLES = 60;
+let bubbles = [];
+function createBubble() {
+  if (bubbles.length >= MAX_BUBBLES) return;
+  const bubble = document.createElement('div');
+  bubble.classList.add('bubble');
+  const size = Math.random() * 55 + 12;
+  bubble.style.width = size + 'px';
+  bubble.style.height = size + 'px';
+  bubble.style.left = Math.random() * 100 + 'vw';
+  const duration = Math.random() * 14 + 9;
+  bubble.style.animationDuration = duration + 's';
+  if (Math.random() > 0.45) {
+    bubble.classList.add('up');
+    bubble.style.animationDuration = (duration + 6) + 's';
+  }
+  bubblesContainer.appendChild(bubble);
+  bubbles.push(bubble);
+  bubble.addEventListener('animationend', () => {
+    bubble.remove();
+    bubbles = bubbles.filter(b => b !== bubble);
+  });
+}
+for (let i = 0; i < 35; i++) setTimeout(createBubble, i * 80);
+let lastTime = 0;
+const INTERVAL_MS = 400;
+function bubbleLoop(timestamp) {
+  if (!lastTime) lastTime = timestamp;
+  if (timestamp - lastTime >= INTERVAL_MS) {
+    createBubble();
+    lastTime = timestamp;
+  }
+  requestAnimationFrame(bubbleLoop);
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) lastTime = 0;
+});
+requestAnimationFrame(bubbleLoop);
+
+// Dropdown Cabeça
+const cabeçaDropdown = document.getElementById('cabeçaDropdown');
+const cabeçaArrow = document.getElementById('cabeçaArrow');
+const cabeçaText = document.getElementById('cabeçaText');
+const submenu = document.getElementById('cabeçaSubmenu');
+cabeçaDropdown.addEventListener('click', () => {
+  submenu.classList.toggle('open');
+  cabeçaArrow.textContent = submenu.classList.contains('open') ? '▲' : '▼';
+});
+document.querySelectorAll('.submenu-item').forEach(item => {
+  item.addEventListener('click', () => {
+    cabeçaText.textContent = item.getAttribute('data-part');
+    submenu.classList.remove('open');
+    cabeçaArrow.textContent = '▼';
+  });
+});
+
+// Status MISC
+const statusText = document.getElementById('statusText');
+const toggles = document.querySelectorAll('.toggle');
+function updateStatus() {
+  const anyActive = Array.from(toggles).some(cb => cb.checked);
+  statusText.innerHTML = anyActive
+    ? 'Status: Tudo ativo <span class="status-on">( On )</span>'
+    : 'Status: Tudo desativado <span class="status-off">( Off )</span>';
+}
+toggles.forEach(toggle => toggle.addEventListener('change', updateStatus));
+updateStatus();
+
+// FOV
+const exibirFov = document.getElementById('exibirFov');
+const circle = document.getElementById('fovCircle');
+function toggleFovCircle() {
+  circle.style.opacity = exibirFov.checked ? '0.65' : '0';
+}
+exibirFov.addEventListener('change', toggleFovCircle);
+
+const track = document.getElementById('fovTrack');
+const knob = document.getElementById('fovKnob');
+const valueDisplay = document.getElementById('fovValue');
+let isDragging = false;
+function updateFOV(percent) {
+  const fov = (percent / 100) * 180;
+  valueDisplay.textContent = `[${fov.toFixed(1)}]`;
+  const size = 40 + (fov / 180) * 320;
+  circle.style.width = size + 'px';
+  circle.style.height = size + 'px';
+}
+knob.addEventListener('mousedown', (e) => {
+  isDragging = true;
+  e.preventDefault();
+  knob.style.cursor = 'grabbing';
+});
+document.addEventListener('mousemove', (e) => {
+  if (!isDragging) return;
+  const rect = track.getBoundingClientRect();
+  let x = e.clientX - rect.left;
+  x = Math.max(0, Math.min(rect.width, x));
+  const percent = (x / rect.width) * 100;
+  knob.style.left = percent + '%';
+  updateFOV(percent);
+});
+document.addEventListener('mouseup', () => {
+  if (isDragging) {
+    isDragging = false;
+    knob.style.cursor = 'grab';
+  }
+});
+track.addEventListener('click', (e) => {
+  const rect = track.getBoundingClientRect();
+  let x = e.clientX - rect.left;
+  x = Math.max(0, Math.min(rect.width, x));
+  const percent = (x / rect.width) * 100;
+  knob.style.left = percent + '%';
+  updateFOV(percent);
+});
+updateFOV(0);
+toggleFovCircle();
+
+// Alternar abas
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.tab).classList.add('active');
+  });
+});
+</script>
 </body>
 </html>
