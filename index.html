@@ -13,10 +13,49 @@
       font-size: 13px;
       min-height: 100vh;
       position: relative;
-      overflow-x: hidden;
+      overflow: hidden;
     }
 
-    /* Bola vermelha FIXA no CENTRO da tela - sempre visível */
+    /* Bolinhas roxas animadas no fundo */
+    .background-bubbles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .bubble {
+      position: absolute;
+      background: radial-gradient(circle at 30% 30%, #c084fc, #7b2cbf, #4a0080);
+      border-radius: 50%;
+      box-shadow: 0 0 15px rgba(123, 44, 191, 0.6);
+      opacity: 0.4;
+      pointer-events: none;
+      animation: float linear infinite;
+    }
+    @keyframes float {
+      0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+      10% { opacity: 0.6; }
+      90% { opacity: 0.6; }
+      100% { transform: translateY(-20vh) scale(1.2); opacity: 0; }
+    }
+    .bubble.up {
+      animation-direction: reverse;
+      animation-duration: 18s; /* subindo mais devagar */
+    }
+
+    /* Centralizar o painel */
+    .container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      width: 100%;
+      max-width: 360px;
+      padding: 20px;
+    }
+
+    /* Bola vermelha FOV - sempre no centro da tela */
     #fovCircle {
       position: fixed;
       top: 50%;
@@ -26,9 +65,9 @@
       border-radius: 50%;
       pointer-events: none;
       box-shadow: 0 0 15px rgba(255,0,0,0.7);
-      z-index: 9999;
+      z-index: 5;
       opacity: 0.6;
-      transition: width 0.2s, height 0.2s;
+      transition: width 0.25s, height 0.25s;
     }
 
     .panel {
@@ -38,9 +77,6 @@
       border-radius: 8px;
       overflow: hidden;
       box-shadow: 0 0 30px rgba(123, 44, 191, 0.7);
-      margin: 20px auto;
-      position: relative;
-      z-index: 10;
     }
     .header {
       background: #4b0082;
@@ -145,141 +181,159 @@
 </head>
 <body>
 
-<!-- Bola vermelha sempre no centro da tela -->
+<!-- Bolinhas roxas no fundo -->
+<div class="background-bubbles" id="bubbles"></div>
+
+<!-- Bola vermelha FOV sempre visível -->
 <div id="fovCircle" style="width:60px; height:60px;"></div>
 
-<div class="panel">
-  <div class="header">
-    <span class="title">FFH4X Calvaolindao</span>
-    <span class="close">×</span>
-  </div>
-
-  <div class="tabs">
-    <div class="tab active" data-tab="aim"><span>✚</span>AIM</div>
-    <div class="tab" data-tab="esp"><span>👁</span>ESP</div>
-    <div class="tab" data-tab="misc"><span>⚙</span>MISC</div>
-  </div>
-
-  <div class="content active" id="aim">
-    <div class="row bordered">
-      <label><input type="checkbox"> Ativar Aimbot</label>
-      <label><input type="checkbox"> Puxar em Paredes</label>
-    </div>
-    <div class="row bordered">
-      <label><input type="checkbox"> Pular Knocked</label>
-      <label><input type="checkbox"> Exibir FOV</label>
+<div class="container">
+  <div class="panel">
+    <div class="header">
+      <span class="title">FFH4X Calvaolindao</span>
+      <span class="close">×</span>
     </div>
 
-    <div class="dropdown-row">
-      <span>Disparo + Escopo</span>
-      <span>▼ <span class="icon-small">✦</span></span>
+    <div class="tabs">
+      <div class="tab active" data-tab="aim"><span>✚</span>AIM</div>
+      <div class="tab" data-tab="esp"><span>👁</span>ESP</div>
+      <div class="tab" data-tab="misc"><span>⚙</span>MISC</div>
     </div>
 
-    <div class="dropdown-row">
-      <span>Cabeça</span>
-      <span>▼ <span class="icon-small">+</span></span>
-    </div>
-
-    <div class="fov-container">
-      <div class="fov-track" id="fovTrack">
-        <div class="fov-knob" id="fovKnob" style="left:0%;"></div>
+    <div class="content active" id="aim">
+      <div class="row bordered">
+        <label><input type="checkbox"> Ativar Aimbot</label>
+        <label><input type="checkbox"> Puxar em Paredes</label>
       </div>
-      <div class="fov-value" id="fovValue">[0.0]</div>
-      <div style="text-align:center; color:#cc99ff;">Regular FOV</div>
-    </div>
-  </div>
+      <div class="row bordered">
+        <label><input type="checkbox"> Pular Knocked</label>
+        <label><input type="checkbox"> Exibir FOV</label>
+      </div>
 
-  <div class="content" id="esp">
-    <div class="row bordered">
-      <label><input type="checkbox"> Ativar ESP</label>
-      <label><input type="checkbox"> Esconder Painel</label>
-    </div>
-    <div class="row">
-      <label><input type="checkbox"> ESP Linha</label>
-    </div>
-    <div class="row">
-      <label><input type="checkbox"> ESP Nome</label>
-    </div>
-    <div class="row">
-      <label><input type="checkbox"> ESP Caixa</label>
-    </div>
-    <div class="row">
-      <label><input type="checkbox"> ESP Esqueleto</label>
-    </div>
-    <div class="row">
-      <label><input type="checkbox"> ESP Vida</label>
-    </div>
-  </div>
+      <div class="dropdown-row">
+        <span>Disparo + Escopo</span>
+        <span>▼ <span class="icon-small">✦</span></span>
+      </div>
 
-  <div class="content" id="misc">
-    <div style="text-align:center; padding:40px 0; color:#9966cc;">
-      MISC (sem opções ainda)
+      <div class="dropdown-row">
+        <span>Cabeça</span>
+        <span>▼ <span class="icon-small">+</span></span>
+      </div>
+
+      <div class="fov-container">
+        <div class="fov-track" id="fovTrack">
+          <div class="fov-knob" id="fovKnob" style="left:0%;"></div>
+        </div>
+        <div class="fov-value" id="fovValue">[0.0]</div>
+        <div style="text-align:center; color:#cc99ff;">Regular FOV</div>
+      </div>
+    </div>
+
+    <div class="content" id="esp">
+      <div class="row bordered">
+        <label><input type="checkbox"> Ativar ESP</label>
+        <label><input type="checkbox"> Esconder Painel</label>
+      </div>
+      <div class="row"><label><input type="checkbox"> ESP Linha</label></div>
+      <div class="row"><label><input type="checkbox"> ESP Nome</label></div>
+      <div class="row"><label><input type="checkbox"> ESP Caixa</label></div>
+      <div class="row"><label><input type="checkbox"> ESP Esqueleto</label></div>
+      <div class="row"><label><input type="checkbox"> ESP Vida</label></div>
+    </div>
+
+    <div class="content" id="misc">
+      <div style="text-align:center; padding:40px 0; color:#9966cc;">
+        MISC (sem opções ainda)
+      </div>
     </div>
   </div>
 </div>
 
 <script>
-  // Alternar abas (sem esconder a bola vermelha)
-  document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
-      tab.classList.add('active');
-      document.getElementById(tab.dataset.tab).classList.add('active');
-      // Bola vermelha NÃO some mais em nenhuma aba
-    });
-  });
-
-  // FOV Slider (só visível na aba AIM, mas o preview persiste em todas)
-  const track = document.getElementById('fovTrack');
-  const knob = document.getElementById('fovKnob');
-  const valueDisplay = document.getElementById('fovValue');
-  const circle = document.getElementById('fovCircle');
-
-  let isDragging = false;
-
-  function updateFOV(percent) {
-    const fov = (percent / 100) * 180;
-    valueDisplay.textContent = `[${fov.toFixed(1)}]`;
-    const size = 40 + (fov / 180) * 300; // tamanho da bola vermelha
-    circle.style.width = size + 'px';
-    circle.style.height = size + 'px';
+// Gerar bolinhas roxas aleatórias (descendo e subindo)
+function createBubble() {
+  const bubble = document.createElement('div');
+  bubble.classList.add('bubble');
+  
+  const size = Math.random() * 40 + 10; // 10 a 50px
+  bubble.style.width = size + 'px';
+  bubble.style.height = size + 'px';
+  
+  bubble.style.left = Math.random() * 100 + 'vw';
+  bubble.style.animationDuration = (Math.random() * 15 + 10) + 's'; // 10-25s
+  
+  if (Math.random() > 0.5) {
+    bubble.classList.add('up'); // algumas sobem
+    bubble.style.animationDuration = (Math.random() * 20 + 15) + 's'; // mais lentas subindo
   }
+  
+  document.getElementById('bubbles').appendChild(bubble);
+  
+  // Remove após animação para não acumular
+  setTimeout(() => bubble.remove(), 30000);
+}
 
-  knob.addEventListener('mousedown', (e) => {
-    isDragging = true;
-    e.preventDefault();
-    knob.style.cursor = 'grabbing';
+setInterval(createBubble, 800); // nova bolinha a cada ~0.8s
+
+// Alternar abas
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.tab).classList.add('active');
   });
+});
 
-  document.addEventListener('mousemove', (e) => {
-    if (!isDragging) return;
-    const rect = track.getBoundingClientRect();
-    let x = e.clientX - rect.left;
-    x = Math.max(0, Math.min(rect.width, x));
-    const percent = (x / rect.width) * 100;
-    knob.style.left = percent + '%';
-    updateFOV(percent);
-  });
+// FOV Slider
+const track = document.getElementById('fovTrack');
+const knob = document.getElementById('fovKnob');
+const valueDisplay = document.getElementById('fovValue');
+const circle = document.getElementById('fovCircle');
 
-  document.addEventListener('mouseup', () => {
-    if (isDragging) {
-      isDragging = false;
-      knob.style.cursor = 'grab';
-    }
-  });
+let isDragging = false;
 
-  track.addEventListener('click', (e) => {
-    const rect = track.getBoundingClientRect();
-    let x = e.clientX - rect.left;
-    x = Math.max(0, Math.min(rect.width, x));
-    const percent = (x / rect.width) * 100;
-    knob.style.left = percent + '%';
-    updateFOV(percent);
-  });
+function updateFOV(percent) {
+  const fov = (percent / 100) * 180;
+  valueDisplay.textContent = `[${fov.toFixed(1)}]`;
+  const size = 40 + (fov / 180) * 300;
+  circle.style.width = size + 'px';
+  circle.style.height = size + 'px';
+}
 
-  // Valor inicial
-  updateFOV(0);
+knob.addEventListener('mousedown', (e) => {
+  isDragging = true;
+  e.preventDefault();
+  knob.style.cursor = 'grabbing';
+});
+
+document.addEventListener('mousemove', (e) => {
+  if (!isDragging) return;
+  const rect = track.getBoundingClientRect();
+  let x = e.clientX - rect.left;
+  x = Math.max(0, Math.min(rect.width, x));
+  const percent = (x / rect.width) * 100;
+  knob.style.left = percent + '%';
+  updateFOV(percent);
+});
+
+document.addEventListener('mouseup', () => {
+  if (isDragging) {
+    isDragging = false;
+    knob.style.cursor = 'grab';
+  }
+});
+
+track.addEventListener('click', (e) => {
+  const rect = track.getBoundingClientRect();
+  let x = e.clientX - rect.left;
+  x = Math.max(0, Math.min(rect.width, x));
+  const percent = (x / rect.width) * 100;
+  knob.style.left = percent + '%';
+  updateFOV(percent);
+});
+
+updateFOV(0);
 </script>
 
 </body>
