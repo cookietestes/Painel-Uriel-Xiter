@@ -15,7 +15,7 @@
       position: relative;
     }
 
-    /* Bolinhas roxas */
+    /* Bolinhas roxas animadas */
     .background-bubbles { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
     .bubble {
       position: absolute;
@@ -34,6 +34,7 @@
     }
     .bubble.up { animation-direction: reverse; }
 
+    /* Container centralizado */
     .center-container {
       position: fixed;
       top: 50%;
@@ -45,6 +46,7 @@
       padding: 0 15px;
     }
 
+    /* Bola vermelha FOV */
     #fovCircle {
       position: fixed;
       top: 50%;
@@ -131,7 +133,7 @@
     .dropdown-row span { color: #ffccff; }
     .icon-small { font-size: 12px; margin: 0 4px; }
 
-    /* Submenu de partes do corpo */
+    /* Submenu partes do corpo */
     .submenu {
       background: #2a004a;
       border: 1px solid #7b2cbf;
@@ -220,7 +222,6 @@
         <span>▼ <span class="icon-small">✦</span></span>
       </div>
 
-      <!-- Dropdown de Cabeça com submenu -->
       <div class="dropdown-row" id="cabeçaDropdown">
         <span id="cabeçaText">Cabeça</span>
         <span id="cabeçaArrow">▼</span>
@@ -263,27 +264,68 @@
 </div>
 
 <script>
-// Bolinhas roxas (já estava bom, mantive)
+// ==================== BOLINHAS OTIMIZADAS ====================
+const bubblesContainer = document.getElementById('bubbles');
+const MAX_BUBBLES = 60;
+let bubbles = [];
+
 function createBubble() {
+  if (bubbles.length >= MAX_BUBBLES) return;
+
   const bubble = document.createElement('div');
   bubble.classList.add('bubble');
+  
   const size = Math.random() * 55 + 12;
   bubble.style.width = size + 'px';
   bubble.style.height = size + 'px';
   bubble.style.left = Math.random() * 100 + 'vw';
+  
   const duration = Math.random() * 14 + 9;
   bubble.style.animationDuration = duration + 's';
+  
   if (Math.random() > 0.45) {
     bubble.classList.add('up');
     bubble.style.animationDuration = (duration + 6) + 's';
   }
-  document.getElementById('bubbles').appendChild(bubble);
-  setTimeout(() => bubble.remove(), (duration + 3) * 1000);
-}
-for (let i = 0; i < 45; i++) setTimeout(createBubble, i * 35);
-setInterval(createBubble, 380);
+  
+  bubblesContainer.appendChild(bubble);
+  bubbles.push(bubble);
 
-// Dropdown Cabeça
+  bubble.addEventListener('animationend', () => {
+    bubble.remove();
+    bubbles = bubbles.filter(b => b !== bubble);
+  });
+}
+
+// Início com muitas bolinhas
+for (let i = 0; i < 35; i++) {
+  setTimeout(createBubble, i * 80);
+}
+
+// Loop suave
+let lastTime = 0;
+const INTERVAL_MS = 400;
+
+function bubbleLoop(timestamp) {
+  if (!lastTime) lastTime = timestamp;
+
+  if (timestamp - lastTime >= INTERVAL_MS) {
+    createBubble();
+    lastTime = timestamp;
+  }
+
+  requestAnimationFrame(bubbleLoop);
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    lastTime = 0;
+  }
+});
+
+requestAnimationFrame(bubbleLoop);
+
+// ==================== DROPDOWN CABEÇA ====================
 const cabeçaDropdown = document.getElementById('cabeçaDropdown');
 const cabeçaArrow = document.getElementById('cabeçaArrow');
 const cabeçaText = document.getElementById('cabeçaText');
@@ -303,7 +345,7 @@ document.querySelectorAll('.submenu-item').forEach(item => {
   });
 });
 
-// FOV (só aparece quando marcado)
+// ==================== FOV ====================
 const exibirFov = document.getElementById('exibirFov');
 const circle = document.getElementById('fovCircle');
 
