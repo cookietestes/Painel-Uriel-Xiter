@@ -15,7 +15,6 @@
       position: relative;
     }
 
-    /* Bolinhas roxas animadas */
     .background-bubbles { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
     .bubble {
       position: absolute;
@@ -34,7 +33,6 @@
     }
     .bubble.up { animation-direction: reverse; }
 
-    /* Container centralizado */
     .center-container {
       position: fixed;
       top: 50%;
@@ -46,7 +44,6 @@
       padding: 0 15px;
     }
 
-    /* Bola vermelha FOV */
     #fovCircle {
       position: fixed;
       top: 50%;
@@ -133,7 +130,6 @@
     .dropdown-row span { color: #ffccff; }
     .icon-small { font-size: 12px; margin: 0 4px; }
 
-    /* Submenu partes do corpo */
     .submenu {
       background: #2a004a;
       border: 1px solid #7b2cbf;
@@ -187,6 +183,21 @@
       font-size: 14px;
       margin: 8px 0;
     }
+
+    /* Estilo para a seção MISC */
+    .misc-info {
+      text-align: center;
+      padding: 20px 10px;
+      background: #2a004a;
+      border: 1px solid #7b2cbf;
+      border-radius: 8px;
+      margin: 15px 0;
+    }
+    .misc-title { font-size: 16px; font-weight: bold; margin-bottom: 10px; color: #ffccff; }
+    .misc-status { font-size: 14px; margin: 8px 0; }
+    .misc-creator { font-size: 13px; color: #cc99ff; }
+    .status-on { color: #00ff88; font-weight: bold; }
+    .status-off { color: #ff6666; font-weight: bold; }
   </style>
 </head>
 <body>
@@ -209,12 +220,12 @@
 
     <div class="content active" id="aim">
       <div class="row bordered">
-        <label><input type="checkbox"> Ativar Aimbot</label>
-        <label><input type="checkbox"> Puxar em Paredes</label>
+        <label><input type="checkbox" class="toggle"> Ativar Aimbot</label>
+        <label><input type="checkbox" class="toggle"> Puxar em Paredes</label>
       </div>
       <div class="row bordered">
-        <label><input type="checkbox"> Pular Knocked</label>
-        <label><input type="checkbox" id="exibirFov"> Exibir FOV</label>
+        <label><input type="checkbox" class="toggle"> Pular Knocked</label>
+        <label><input type="checkbox" id="exibirFov" class="toggle"> Exibir FOV</label>
       </div>
 
       <div class="dropdown-row">
@@ -245,19 +256,21 @@
 
     <div class="content" id="esp">
       <div class="row bordered">
-        <label><input type="checkbox"> Ativar ESP</label>
-        <label><input type="checkbox"> Esconder Painel</label>
+        <label><input type="checkbox" class="toggle"> Ativar ESP</label>
+        <label><input type="checkbox" class="toggle"> Esconder Painel</label>
       </div>
-      <div class="row"><label><input type="checkbox"> ESP Linha</label></div>
-      <div class="row"><label><input type="checkbox"> ESP Nome</label></div>
-      <div class="row"><label><input type="checkbox"> ESP Caixa</label></div>
-      <div class="row"><label><input type="checkbox"> ESP Esqueleto</label></div>
-      <div class="row"><label><input type="checkbox"> ESP Vida</label></div>
+      <div class="row"><label><input type="checkbox" class="toggle"> ESP Linha</label></div>
+      <div class="row"><label><input type="checkbox" class="toggle"> ESP Nome</label></div>
+      <div class="row"><label><input type="checkbox" class="toggle"> ESP Caixa</label></div>
+      <div class="row"><label><input type="checkbox" class="toggle"> ESP Esqueleto</label></div>
+      <div class="row"><label><input type="checkbox" class="toggle"> ESP Vida</label></div>
     </div>
 
     <div class="content" id="misc">
-      <div style="text-align:center; padding:40px 0; color:#9966cc;">
-        MISC (sem opções ainda)
+      <div class="misc-info">
+        <div class="misc-title">FFH4X Painel Free</div>
+        <div class="misc-status" id="statusText">Status: Tudo desativado ( Off )</div>
+        <div class="misc-creator">Criador do auxilio Vip ( @Calvaolindao )</div>
       </div>
     </div>
   </div>
@@ -271,58 +284,39 @@ let bubbles = [];
 
 function createBubble() {
   if (bubbles.length >= MAX_BUBBLES) return;
-
   const bubble = document.createElement('div');
   bubble.classList.add('bubble');
-  
   const size = Math.random() * 55 + 12;
   bubble.style.width = size + 'px';
   bubble.style.height = size + 'px';
   bubble.style.left = Math.random() * 100 + 'vw';
-  
   const duration = Math.random() * 14 + 9;
   bubble.style.animationDuration = duration + 's';
-  
   if (Math.random() > 0.45) {
     bubble.classList.add('up');
     bubble.style.animationDuration = (duration + 6) + 's';
   }
-  
   bubblesContainer.appendChild(bubble);
   bubbles.push(bubble);
-
   bubble.addEventListener('animationend', () => {
     bubble.remove();
     bubbles = bubbles.filter(b => b !== bubble);
   });
 }
-
-// Início com muitas bolinhas
-for (let i = 0; i < 35; i++) {
-  setTimeout(createBubble, i * 80);
-}
-
-// Loop suave
+for (let i = 0; i < 35; i++) setTimeout(createBubble, i * 80);
 let lastTime = 0;
 const INTERVAL_MS = 400;
-
 function bubbleLoop(timestamp) {
   if (!lastTime) lastTime = timestamp;
-
   if (timestamp - lastTime >= INTERVAL_MS) {
     createBubble();
     lastTime = timestamp;
   }
-
   requestAnimationFrame(bubbleLoop);
 }
-
 document.addEventListener('visibilitychange', () => {
-  if (document.hidden) {
-    lastTime = 0;
-  }
+  if (document.hidden) lastTime = 0;
 });
-
 requestAnimationFrame(bubbleLoop);
 
 // ==================== DROPDOWN CABEÇA ====================
@@ -330,25 +324,40 @@ const cabeçaDropdown = document.getElementById('cabeçaDropdown');
 const cabeçaArrow = document.getElementById('cabeçaArrow');
 const cabeçaText = document.getElementById('cabeçaText');
 const submenu = document.getElementById('cabeçaSubmenu');
-
 cabeçaDropdown.addEventListener('click', () => {
   submenu.classList.toggle('open');
   cabeçaArrow.textContent = submenu.classList.contains('open') ? '▲' : '▼';
 });
-
 document.querySelectorAll('.submenu-item').forEach(item => {
   item.addEventListener('click', () => {
-    const part = item.getAttribute('data-part');
-    cabeçaText.textContent = part;
+    cabeçaText.textContent = item.getAttribute('data-part');
     submenu.classList.remove('open');
     cabeçaArrow.textContent = '▼';
   });
 });
 
+// ==================== STATUS MISC (Tudo ativo / desativado) ====================
+const statusText = document.getElementById('statusText');
+const toggles = document.querySelectorAll('.toggle');
+
+function updateStatus() {
+  const anyActive = Array.from(toggles).some(cb => cb.checked);
+  statusText.innerHTML = anyActive 
+    ? 'Status: Tudo ativo <span class="status-on">( On )</span>'
+    : 'Status: Tudo desativado <span class="status-off">( Off )</span>';
+}
+
+// Atualiza status sempre que um checkbox mudar
+toggles.forEach(toggle => {
+  toggle.addEventListener('change', updateStatus);
+});
+
+// Atualiza inicial
+updateStatus();
+
 // ==================== FOV ====================
 const exibirFov = document.getElementById('exibirFov');
 const circle = document.getElementById('fovCircle');
-
 function toggleFovCircle() {
   circle.style.opacity = exibirFov.checked ? '0.65' : '0';
 }
@@ -359,7 +368,6 @@ const track = document.getElementById('fovTrack');
 const knob = document.getElementById('fovKnob');
 const valueDisplay = document.getElementById('fovValue');
 let isDragging = false;
-
 function updateFOV(percent) {
   const fov = (percent / 100) * 180;
   valueDisplay.textContent = `[${fov.toFixed(1)}]`;
@@ -367,13 +375,11 @@ function updateFOV(percent) {
   circle.style.width = size + 'px';
   circle.style.height = size + 'px';
 }
-
 knob.addEventListener('mousedown', (e) => {
   isDragging = true;
   e.preventDefault();
   knob.style.cursor = 'grabbing';
 });
-
 document.addEventListener('mousemove', (e) => {
   if (!isDragging) return;
   const rect = track.getBoundingClientRect();
@@ -383,14 +389,12 @@ document.addEventListener('mousemove', (e) => {
   knob.style.left = percent + '%';
   updateFOV(percent);
 });
-
 document.addEventListener('mouseup', () => {
   if (isDragging) {
     isDragging = false;
     knob.style.cursor = 'grab';
   }
 });
-
 track.addEventListener('click', (e) => {
   const rect = track.getBoundingClientRect();
   let x = e.clientX - rect.left;
@@ -399,7 +403,6 @@ track.addEventListener('click', (e) => {
   knob.style.left = percent + '%';
   updateFOV(percent);
 });
-
 updateFOV(0);
 toggleFovCircle();
 
