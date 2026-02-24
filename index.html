@@ -32,14 +32,8 @@
       align-items: center;
       border-bottom: 1px solid #7b2cbf;
     }
-    .title {
-      font-weight: bold;
-      font-size: 15px;
-    }
-    .close {
-      font-size: 18px;
-      cursor: pointer;
-    }
+    .title { font-weight: bold; font-size: 15px; }
+    .close { font-size: 18px; cursor: pointer; }
     .tabs {
       display: flex;
       background: #2e005c;
@@ -63,7 +57,9 @@
     .tab span { margin-right: 4px; }
     .content {
       padding: 12px;
+      display: none;
     }
+    .content.active { display: block; }
     .row {
       display: flex;
       justify-content: space-between;
@@ -92,44 +88,58 @@
       align-items: center;
       justify-content: space-between;
     }
-    .dropdown-row span {
-      color: #ffccff;
-    }
+    .dropdown-row span { color: #ffccff; }
     .icon-small { font-size: 12px; margin: 0 4px; }
+
+    /* FOV Slider */
     .fov-container {
-      display: flex;
-      align-items: center;
       background: #2a004a;
       border: 1px solid #7b2cbf;
       border-radius: 4px;
-      padding: 6px 10px;
+      padding: 10px;
       margin-top: 12px;
+      position: relative;
     }
-    .fov-bar {
-      flex: 1;
+    .fov-track {
       height: 6px;
       background: #4a0080;
       border-radius: 3px;
-      margin: 0 10px;
+      margin: 20px 0 10px;
       position: relative;
+      cursor: pointer;
     }
     .fov-knob {
       position: absolute;
-      left: 0;
       top: -4px;
-      width: 14px;
-      height: 14px;
+      width: 16px;
+      height: 16px;
       background: #ff66cc;
       border-radius: 50%;
-      box-shadow: 0 0 8px #ff66cc;
+      box-shadow: 0 0 10px #ff66cc;
+      transform: translateX(-50%);
+      cursor: grab;
+      user-select: none;
     }
     .fov-value {
-      background: #1e0038;
-      border: 1px solid #7b2cbf;
-      padding: 3px 8px;
-      border-radius: 4px;
-      min-width: 50px;
       text-align: center;
+      font-size: 14px;
+      margin: 8px 0;
+    }
+    .fov-preview {
+      width: 100%;
+      height: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+    .fov-circle {
+      border: 3px solid #ff0000;
+      border-radius: 50%;
+      position: absolute;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      box-shadow: 0 0 12px rgba(255,0,0,0.6);
     }
   </style>
 </head>
@@ -142,14 +152,12 @@
   </div>
 
   <div class="tabs">
-    <div class="tab active"><span>✚</span>AIM</div>
-    <div class="tab"><span>👁</span>ESP</div>
-    <div class="tab"><span>⚙</span>MISC</div>
+    <div class="tab active" data-tab="aim"><span>✚</span>AIM</div>
+    <div class="tab" data-tab="esp"><span>👁</span>ESP</div>
+    <div class="tab" data-tab="misc"><span>⚙</span>MISC</div>
   </div>
 
-  <div class="content">
-
-    <!-- ABA AIM -->
+  <div class="content active" id="aim">
     <div class="row bordered">
       <label><input type="checkbox"> Ativar Aimbot</label>
       <label><input type="checkbox"> Puxar em Paredes</label>
@@ -170,16 +178,106 @@
     </div>
 
     <div class="fov-container">
-      <div style="background:#ff66cc; width:8px; height:20px; border-radius:3px;"></div>
-      <div class="fov-bar">
-        <div class="fov-knob"></div>
+      <div class="fov-preview">
+        <div class="fov-circle" id="fovCircle" style="width:60px; height:60px;"></div>
       </div>
-      <div class="fov-value">[0.0]</div>
-      <span>Regular FOV</span>
+      <div class="fov-track" id="fovTrack">
+        <div class="fov-knob" id="fovKnob" style="left:0%;"></div>
+      </div>
+      <div class="fov-value" id="fovValue">[0.0]</div>
+      <div style="text-align:center; color:#cc99ff;">Regular FOV</div>
     </div>
+  </div>
 
+  <div class="content" id="esp">
+    <div class="row bordered">
+      <label><input type="checkbox"> Ativar ESP</label>
+      <label><input type="checkbox"> Esconder Painel</label>
+    </div>
+    <div class="row">
+      <label><input type="checkbox"> ESP Linha</label>
+    </div>
+    <div class="row">
+      <label><input type="checkbox"> ESP Nome</label>
+    </div>
+    <div class="row">
+      <label><input type="checkbox"> ESP Caixa</label>
+    </div>
+    <div class="row">
+      <label><input type="checkbox"> ESP Esqueleto</label>
+    </div>
+    <div class="row">
+      <label><input type="checkbox"> ESP Vida</label>
+    </div>
+  </div>
+
+  <div class="content" id="misc">
+    <div style="text-align:center; padding:20px; color:#9966cc;">
+      MISC (em breve)
+    </div>
   </div>
 </div>
+
+<script>
+  // Alternar abas
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.tab).classList.add('active');
+    });
+  });
+
+  // FOV Slider arrastável
+  const track = document.getElementById('fovTrack');
+  const knob = document.getElementById('fovKnob');
+  const valueDisplay = document.getElementById('fovValue');
+  const circle = document.getElementById('fovCircle');
+
+  let isDragging = false;
+
+  function updateFOV(percent) {
+    const fov = (percent / 100) * 180;
+    valueDisplay.textContent = `[${fov.toFixed(1)}]`;
+    const size = 30 + (fov / 180) * 140; // de 30px a 170px
+    circle.style.width = size + 'px';
+    circle.style.height = size + 'px';
+  }
+
+  knob.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    knob.style.cursor = 'grabbing';
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    const rect = track.getBoundingClientRect();
+    let x = e.clientX - rect.left;
+    x = Math.max(0, Math.min(rect.width, x));
+    const percent = (x / rect.width) * 100;
+    knob.style.left = percent + '%';
+    updateFOV(percent);
+  });
+
+  document.addEventListener('mouseup', () => {
+    isDragging = false;
+    knob.style.cursor = 'grab';
+  });
+
+  // Clique na track também move
+  track.addEventListener('click', (e) => {
+    const rect = track.getBoundingClientRect();
+    let x = e.clientX - rect.left;
+    x = Math.max(0, Math.min(rect.width, x));
+    const percent = (x / rect.width) * 100;
+    knob.style.left = percent + '%';
+    updateFOV(percent);
+  });
+
+  // Valor inicial
+  updateFOV(0);
+</script>
 
 </body>
 </html>
